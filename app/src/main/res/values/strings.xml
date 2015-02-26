@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Things</string>
+    <string name="title_activity_main">Main</string>
+    <string name="title">Things!</string>
+    <string name="subtitle">Join the cast!</string>
+    <string name="userPrompt">Enter username</string>
+    <string name="action_settings">Settings</string>
+    <string name="joinButton">Join!</string>
+    <string name="promptPrompt">Choose a prompt!</string>
+    <string name="cardHere">A prompt will show here</string>
+    <string name="entryTitle">Your Prompt Is:</string>
+    <string name="entryPrompt">Put your entry here</string>
+    <string name="confirm">Confirm!</string>
+    <string name="entryHere">The game will hide the user\'s and guessed entries from this view</string>
+    <string name="entryGuessPrompt">Choose an entry to guess its writer:</string>
+    <string name="entryGuessUser">Guess the user for the entry:</string>
+    <string name="selectedEntry">The previously selected entry will go here</string>
+    <string name="userHere">Users not eliminated here</string>
+    <string name="back"><u> &lt; Back </u></string>
+    <string name="loading">Please Wait</string>
+    <string name="waitingFor">Detail Here for Loading Content</string>
+    <string name="nope">No -.-</string>
+    <string name="subtitle2">Join the cast again?</string>
+
+</resources>

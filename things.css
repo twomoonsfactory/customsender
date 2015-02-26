@@ -1,0 +1,101 @@
+body{
+	background-color: #000022;
+	color: #FF9900;
+}
+
+#container{
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+#titleBar{
+	position: relative;
+	width: 100%;
+}
+#title{
+	font-weight: bold;
+}
+#subtitle{
+	font-style: italic;
+}
+#updates{
+	padding-left: 10%;
+}
+#gameInfo{
+	width: 65%;
+	position: relative;
+	float: left;
+}
+#playerInfo{
+	position: absolute;
+	right:0;
+	top:0;
+	width: 35%;
+	height: 100%;
+}
+#entries{
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+}
+#players{
+	
+}
+.gone{
+	display: none;
+}
+.guessed{
+	text-decoration: line-through;
+}
+#player1{
+
+}
+
+#player2{
+
+}
+#player3{
+
+}
+#player4{
+
+}
+#player5{
+
+}
+#player6{
+
+}
+#player7{
+
+}
+#player8{
+
+}
+#entry1{
+
+}
+#entry2{
+
+}
+#entry3{
+
+}
+#entry4{
+
+}
+#entry5{
+
+}
+#entry6{
+
+}
+#entry7{
+
+}
+#entry8{
+
+}
+#entry9{
+
+}
