@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/build/intermediates/exploded-aar/PureAndroid/CastCompanionLibrary-android-master/unspecified/release/res/values-v11/values.xml -->
+    <eat-comment/>
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
+        <!-- API 11 theme customizations can go here. -->
+    </style>
     <!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values-v11/values.xml -->
     <eat-comment/>
     <style name="Base.TextAppearance.AppCompat.Inverse">
@@ -168,6 +173,17 @@
         <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
         <item name="android:popupBackground">@drawable/abc_popup_background_mtrl_mult</item>
     </style>
+    <!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/build/intermediates/exploded-aar/PureAndroid/CastCompanionLibrary-android-master/unspecified/release/res/values-v11/values.xml -->
+    <eat-comment/>
+    <style name="CastDialog" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:windowTitleStyle">@style/CastDialogWindowTitle</item>
+    </style>
+    <style name="CastDialogWindowTitle">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/mr_custom_title</item>
+    </style>
+    <!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values-v11/values.xml -->
+    <eat-comment/>
     <style name="Platform.AppCompat" parent="android:Theme.Holo">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>

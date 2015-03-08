@@ -253,6 +253,13 @@
         <item name="popupPromptView">@layout/abc_simple_dropdown_hint</item>
     </style>
     <style name="Base.Widget.AppCompat.Toolbar.Button.Navigation" parent="android:Widget.Material.Toolbar.Button.Navigation"/>
+    <!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/build/intermediates/exploded-aar/PureAndroid/CastCompanionLibrary-android-master/unspecified/release/res/values-v21/values.xml -->
+    <eat-comment/>
+    <style name="CastDialog" parent="android:Theme.Material.Dialog">
+        <item name="android:windowTitleStyle">@style/CastDialogWindowTitle</item>
+    </style>
+    <!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values-v21/values.xml -->
+    <eat-comment/>
     <style name="Platform.AppCompat" parent="android:Theme.Material">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
