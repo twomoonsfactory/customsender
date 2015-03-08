@@ -17,7 +17,7 @@
     <string msgid="893419373245838918" name="abc_searchview_description_voice">"Búsqueda por voz"</string>
     <string msgid="3421042268587513524" name="abc_shareactionprovider_share_with">"Compartir con"</string>
     <string msgid="7165123711973476752" name="abc_shareactionprovider_share_with_application">"Compartir con %s"</string>
-    <!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values-es/common_strings.xml -->
+    <!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/6.5.87/res/values-es/common_strings.xml -->
     <eat-comment/>
     <string msgid="473679118463211576" name="common_android_wear_notification_needs_update_text">"Una aplicación necesita que Android Wear se actualice."</string>
     <string msgid="3046420540094071256" name="common_android_wear_update_text">"Esta aplicación no se ejecutará hasta que actualices Android Wear."</string>
@@ -55,7 +55,4 @@
     <string msgid="109793632378378069" name="mr_media_route_controller_disconnect">"Desconectar"</string>
     <string msgid="5441529851481176817" name="mr_system_route_name">"Sistema"</string>
     <string msgid="7498112907524977311" name="mr_user_route_category_name">"Dispositivos"</string>
-    <!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values-es/wallet_strings.xml -->
-    <eat-comment/>
-    <string name="wallet_buy_button_place_holder">Comprar con Google</string>
 </resources>
