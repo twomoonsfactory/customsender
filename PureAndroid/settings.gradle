@@ -1,2 +1,0 @@
-include ':app', ':partythings', ':CastCompanionLibrary-android-master'
-project(':CastCompanionLibrary-android-master').projectDir = new File('CastCompanionLibrary-android-master')
