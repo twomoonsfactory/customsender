@@ -1,4 +1,4 @@
-angular.module('gameMaster')
+var app = angular.module('gameMaster')
 	.controller('gameController', [$scope, gameValues, castServices, function($scope, gameServices, castServices){
 		// set default databindings on display
 		$scope.messages = gameValues.header;
@@ -28,7 +28,7 @@ angular.module('gameMaster')
 		return gameServices;
 	});
 
-angular.module('castServices')
+var caster = angular.module('castServices')
 	.value('cast', cast)
 	.factory('castMessageBus', ['cast', '$log', function(cast, $log){
 
