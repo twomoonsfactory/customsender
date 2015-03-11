@@ -1,75 +1,17 @@
-<html>
-<head>
-	<!--<link rel="stylesheet" type="text/css" href="../css/receiver.css" />-->
-<body class="initial">
-	<div>
-		<h1 class="messages" style="color:red;">Waiting for Messages...</h1>
-		<img class="hulk" src="https://33.media.tumblr.com/48b1991b8026737f52d607651be4a43e/tumblr_nkpb0640Of1qcm3fwo1_500.gif" />
-	</div>
-</body>
+<!DOCTYPE HTML>
 
-<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-<script src="https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
-<script>
-	$(function() {
-	    var castReceiverManager = null;
-	    var messageBus = null;
-	    
-	    window.onload = function() {
-            cast.receiver.logger.setLevelValue(0);
-            castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
-            console.log('Starting Receiver Manager');
-            
-             // handler for the 'ready' event
-            castReceiverManager.onReady = function(event) {
-              console.log('Received Ready event: ' + JSON.stringify(event.data));
-              castReceiverManager.setApplicationState("Application status is ready...");
-            };
-            
-             castReceiverManager.onSenderConnected = function(event) {
-              console.log('Received Sender Connected event: ' + event.data);
-              console.log(castReceiverManager.getSender(event.data).userAgent);
-            };
-            
-            // handler for 'senderdisconnected' event
-            castReceiverManager.onSenderDisconnected = function(event) {
-              console.log('Received Sender Disconnected event: ' + event.data);
-              if (castReceiverManager.getSenders().length == 0) {
-    	        window.close();
-    	      }
-            };
-            
-            // create a CastMessageBus to handle messages for a custom namespace
-            messageBus = castReceiverManager.getCastMessageBus(
-                  'urn:x-cast:com.pt.basic');
-            // handler for the CastMessageBus message event
-            messageBus.onMessage = function(event) {
-              console.log('Message [' + event.senderId + ']: ' + event.data);
-              // display the message from the sender
-              displayText(event.data);
-              // inform all senders on the CastMessageBus of the incoming message event
-              // sender message listener will be invoked
-              messageBus.send(event.senderId, "Polo");
-            }
-            
-            // initialize the CastReceiverManager with an application status message
-            castReceiverManager.start({statusText: "Application is starting"});
-            console.log('Receiver Manager started');
-            
-             // handler for 'systemvolumechanged' event
-            castReceiverManager.onSystemVolumeChanged = function(event) {
-              console.log('Received System Volume Changed event: ' + event.data['level'] + ' ' +
-                  event.data['muted']);
-            };
-        };
-        
-        // utility function to display the text message in the input field
-          function displayText(text) {
-            console.log(text);
-            $(".messages").text(text);
-            $(".hulk").attr('src', 'https://31.media.tumblr.com/9609c3e2cd75207185faeff18e44d2ab/tumblr_mthtpofxcy1rdbd0qo2_500.gif');
-          };
-	});
-</script>
+<html>
+
+<head>
+  <title>Testing</title>
+</head>
+
+<body data-ng-app="gameMaster" data-ng-controller="gameController">
+  {{message}}
+  <br />
+  <img data-ng-src="{{hulk}}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  <script src="app.js"></script>
+</body>
 
 </html>
