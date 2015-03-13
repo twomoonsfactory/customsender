@@ -78,12 +78,9 @@ angular.module('gameMaster.castServices', [])
 	  	messageBuses['test'] = 'urn:x-cast:com.pt.basic';
 	  	for(var i = 0; i < messagetypes.length; i++){
 	  		messageBuses[messagetypes[i]] = castReceiverManager.getCastMessageBus('urn:x-cast:com.partythings.' + messagetypes[i]);
+	  		$log.log(messageBuses[messagetypes[i]].getNamespace());
 	  	}    
-    	$log.log(messageBuses.gamename);
 
-
-
-	    
 
 	    // initialization for the manager and log
 	    castReceiverManager.start({statusText: "Application is starting"});
