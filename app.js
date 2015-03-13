@@ -1,13 +1,11 @@
 angular.module('gameMaster', ['gameMaster.controllers', 'gameMaster.services', 'gameMaster.castServices']);
 
 angular.module('gameMaster.controllers', [])
-	.controller('gameController', ['$scope', '$log', 'imageProvider', 'castMessageBus', 'player', function($scope, $log, imageProvider, castMessageBus, player) {
+	.controller('gameController', ['$scope', '$log', 'imageProvider', 'castMessageBus', function($scope, $log, imageProvider, castMessageBus) {
 	     
 	      	$scope.message = 'Waiting for Marco';
 	      	$scope.hulk = imageProvider.getPic('waiting');
-	      	$scope.playerID = player;
-
-
+	      
 	      	//here's the chromecast message handler:
 	      	castMessageBus.test.onMessage = function(event){
 	        	$log.log("Message received: " + event.data);
@@ -41,7 +39,7 @@ angular.module('gameMaster.services', [])
 
 angular.module('gameMaster.castServices', [])
   	.value('cast', cast)
-  	.factory('castMessageBus', function(cast, channels, messagetypes, player, $log) {
+  	.factory('castMessageBus', function(cast, channels, messagetypes, $log) {
 
 	    // start up chromecast
 	    cast.receiver.logger.setLevelValue(0);
@@ -58,7 +56,6 @@ angular.module('gameMaster.castServices', [])
 	    castReceiverManager.onSenderConnected = function(event) {
 	      $log.log('Received Sender Connected event: ' + event.data);
 	      $log.log(castReceiverManager.getSender(event.data).userAgent);
-	      player = event.getSenderID();
 	    };
 
 	    // 'senderdisconnected' event handler
@@ -83,6 +80,9 @@ angular.module('gameMaster.castServices', [])
 	  		messageBuses[messagetypes[i]] = castReceiverManager.getCastMessageBus('urn:x-cast:com.partythings.' + messagetypes[i]);
 	  	}    
     	$log.log(messageBuses.gamename);
+
+
+
 	    
 
 	    // initialization for the manager and log
@@ -92,5 +92,4 @@ angular.module('gameMaster.castServices', [])
 	    return messageBuses;
  	})
 	.value('channels', [])
-	.value('player', 'Player ID Here')
 	.constant('messagetypes', ['gamename','playername','ready','prompt','standby','guess','end']);
