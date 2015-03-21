@@ -227,43 +227,41 @@ angular.module('gameMaster.controllers', [])
 			
 			//handles received guesses
 			this.guessReceivedHandler = function(args){
-				for(var i = 0; i < $scope.players.length; i++){
-					var guess = angular.fromJson(args.message)
+				
 
-					if($scope.players[i].senderId===args.senderId){
-						//evaluates guesses and sorts them into things for correct guesses and wrongGuesses if not.
-						for(var j = 0; j < $scope.things.length; j++){
-							correct = false;
-							exists = false;
-							if(guess.thing===$scope.things[j].thing && guess.writer===$scope.things[j].writer && guess.writer!==$scope.players[i].playername){
-								correct = true;
-								$scope.things[j].guessedThisTurn = true;
-								$scope.things[j].guesser.push($scope.players[i].playername);
-							}
-							if(!correct){
-								for(var k = 0; k < wrongCount; k++){
-									for(var l = 0; l < wrongCount; l++){
-										if(guess.thing===$scope.wrongGuesses[k].thing && (guess.writer===$scope.wrongGuesses[l].writer)){
-											exists=true;
-											$scope.wrongGuesses[k].guesser.push($scope.players[i].playername);
-										}
-									}
-								}
-								if(!exists)
-									$scope.wrongGuesses[wrongCount] = ({thing:guess.thing, writer:guess.writer, guesser:[$scope.players[i].playername]});
-								wrongCount++;
-							}	
-				 			}						
-						$scope.players[i].status="waiting";
-						stateManager.stateCount++;
+					//NOTE: fromJson should be handled before this point. That a service level responsibility.
+					//I'm even okay with it being down where the cast gets the message, it isnt' really logic, just transform
+
+					//NOTE 2: You're doing this for every player when you only get args once, if we left it it should go outside the loop
+					var guess = angular.fromJson(args.message);
+
+					var guessingPlayer = _.findWhere($scope.players, {senderId: args.senderId});
+					if(!guessingPlayer){
+						console.log("unfound player: " + args.senderId);
+						return;
 					}
-				}
-				if(stateManager.stateCount===stateManager.playerCount){
+									
+					guessingPlayer.status="waiting";
+					if(!stateManager.currentguesses){
+						stateManager.currentguesses = [];
+					}
+
+					stateManager.currentguesses.push({player: guessingPlayer, guess:guess});
+			
+				if(stateManager.currentguesses.length===stateManager.playerCount){
+					this.processGuesses();
+
 					this.cleanout();
+
 					stateManager.setState("roundResults");
 				}
-			};
+			}
 			eventService.subscribe("guessReceived", this.guessReceivedHandler);
+
+			this.processGuesses = function(){
+				//evaluates guesses and sorts them into things for correct guesses and wrongGuesses if not.				
+				
+			};
 
 			//resolves guesses w/displays and scores
 			eventService.subscribe("roundResults", function(args){

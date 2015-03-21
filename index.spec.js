@@ -453,43 +453,109 @@ describe('gameController', function () {
             expect(messageSender.requestGuess).toHaveBeenCalledWith({senderId: scope.players[0].senderId, message: JSON.stringify(scope.things)});
             expect(messageSender.requestGuess.calls.count()).toEqual(2);
         });
+      
+        describe('guess Handler', function ()
+        {
+            var players = [{status: "voting",
+                            score: 0,
+                            senderId: 99,
+                            name: 'JoeBob',
+                            guessedThisRound: false,
+                            quit: false
+                        },
+                        {status: "voting",
+                            score: 0,
+                            senderId: 100,
+                            name: 'Sally',
+                            guessedThisRound: false,
+                            quit: false
+                        },
+                         {status: "quit",
+                            score: 0,
+                            senderId: 5123,
+                            name: 'Kronk',
+                            guessedThisRound: false,
+                            quit: false
+                        }];
 
-        it('expects guesses to be managed accurately', function(){
-            scope.players[0] = {status: "voting",
-                    score: 0,
-                    senderId: 99,
-                    name: 'JoeBob',
-                    guessedThisRound: false,
-                    quit: false
-                };
-            scope.players[1] = {status: "voting",
-                    score: 0,
-                    senderId: 100,
-                    name: 'Sally',
-                    guessedThisRound: false,
-                    quit: false
-                };
-            scope.players[2] = {status: "quit",
-                    score: 0,
-                    senderId: 5123,
-                    name: 'Kronk',
-                    guessedThisRound: false,
-                    quit: false
-                };
-            scope.things[0] = {writer: "Sally", thing:"thing1", guessedThisTurn: false, guesser: [], turnsUnguessed: 0, randomPosition: 1};
-            scope.things[1] = {writer: "JoeBob", thing:"thing2", guessedThisTurn: false, guesser: [], turnsUnguessed: 0, randomPosition: 2};
-            stateManager.playerCount = 2;
-            var guess1 = {senderId: 99, message: JSON.stringify({thing: "thing1", writer: "Sally"})};
-            var guess2 = {senderId: 100, message: JSON.stringify({thing: "thing1", writer: "JoeBob"})};
+            beforeEach(function(){
+                scope.players = players;
+            });
+                it('processes guesses correctly', function(){
+                    //NOTE: I would change things to generate an Id when they're received (a simple int counter is fine)
+                    // And store that as the id, and then change things to be a hash.
+                    // so scope.things = {};
+                    // then you can do the dynamic id lookup:  scope.things[guess.thingId];
+                    scope.things[0] = {writer: "Sally", thing:"thing1", guessedThisTurn: false, guesser: [], turnsUnguessed: 0, randomPosition: 1};
+                    scope.things[1] = {writer: "JoeBob", thing:"thing2", guessedThisTurn: false, guesser: [], turnsUnguessed: 0, randomPosition: 2};
+                    stateManager.playerCount = 2;                    
+                    var guess1 = {senderId: 99, message: {thing: "thing1", writer: "Sally"}};
+                    var guess2 = {senderId: 100, message: {thing: "thing1", writer: "JoeBob"}};
+                    stateManager.currentguesses = [];
+                    stateManager.currentguesses.push(guess1);
+                    stateManager.currentguesses.push(guess2);
 
-            controller.guessReceivedHandler(guess1);
-            controller.guessReceivedHandler(guess2);
+                    controller.processGuesses();                    
 
-            expect(scope.things[0].guessedThisTurn).toBe(true);
-            expect(scope.things[1].guessedThisTurn).toBe(false);
-            expect(scope.wrongGuesses).toBeDefined;
-            expect(scope.wrongGuesses[0]).toBe({thing:'thing1', writer:'JoeBob', guesser: ['JoeBob']});
-            expect(stateManager.state).toBe("roundResults");
-        });
+                    expect(scope.things[0].guessedThisTurn).toBe(true);
+                    expect(scope.things[1].guessedThisTurn).toBe(false);
+                    expect(scope.wrongGuesses).toBeDefined;
+                    expect(scope.wrongGuesses[0]).toBe({thing:'thing1', writer:'JoeBob', guesser: ['JoeBob']});
+                    expect(stateManager.state).toBe("roundResults");
+                });
 
+                it('doesnt process guesses until all received', function(){
+                    scope.things[0] = {writer: "Sally", thing:"thing1", guessedThisTurn: false, guesser: [], turnsUnguessed: 0, randomPosition: 1};
+                    scope.things[1] = {writer: "JoeBob", thing:"thing2", guessedThisTurn: false, guesser: [], turnsUnguessed: 0, randomPosition: 2};
+                    stateManager.playerCount = 2;
+                    var guess1 = {senderId: 99, message: JSON.stringify({thing: "thing1", writer: "Sally"})};
+                    var guess2 = {senderId: 100, message: JSON.stringify({thing: "thing1", writer: "JoeBob"})};
+
+                    spyOn(controller, 'processGuesses').and.callFake();
+
+
+                    controller.guessReceivedHandler(guess1);
+
+                    expect(controller.processGuesses).not.toHaveBeenCalled();
+                });
+
+                it('processes guesses after all received', function(){
+                    scope.things[0] = {writer: "Sally", thing:"thing1", guessedThisTurn: false, guesser: [], turnsUnguessed: 0, randomPosition: 1};
+                    scope.things[1] = {writer: "JoeBob", thing:"thing2", guessedThisTurn: false, guesser: [], turnsUnguessed: 0, randomPosition: 2};
+                    stateManager.playerCount = 2;
+                    var guess1 = {senderId: 99, message: JSON.stringify({thing: "thing1", writer: "Sally"})};
+                    var guess2 = {senderId: 100, message: JSON.stringify({thing: "thing1", writer: "JoeBob"})};
+
+                    spyOn(controller, 'processGuesses').and.callFake(function(){});
+
+                    controller.guessReceivedHandler(guess1);
+                    controller.guessReceivedHandler(guess2);
+
+                    expect(controller.processGuesses).toHaveBeenCalled();
+                });
+
+                it('stores guesses', function(){
+                    scope.things[0] = {writer: "Sally", thing:"thing1", guessedThisTurn: false, guesser: [], turnsUnguessed: 0, randomPosition: 1};                    
+                    stateManager.playerCount = 2;
+                    var guess1 = {senderId: 99, message: JSON.stringify({thing: "thing1", writer: "Sally"})};                   
+                    spyOn(controller, 'processGuesses').and.callFake(function(){});
+
+                    controller.guessReceivedHandler(guess1);
+
+                    expect(stateManager.currentguesses[0]).toBe(guess1);
+                });
+
+                 it('cleans up after processing ', function(){
+                    scope.things[0] = {writer: "Sally", thing:"thing1", guessedThisTurn: false, guesser: [], turnsUnguessed: 0, randomPosition: 1};                    
+                    stateManager.playerCount = 2;
+                    var guess1 = {senderId: 99, message: JSON.stringify({thing: "thing1", writer: "Sally"})};                   
+                    spyOn(controller, 'processGuesses').and.callFake(function(){});
+                    spyOn(controller, 'cleanout').and.callFake(function(){});
+
+                    controller.guessReceivedHandler(guess1);
+                    controller.guessReceivedHandler(guess1);
+
+                    expect(controller.cleanout).toHaveBeenCalled();
+                });
+            });
 });
