@@ -1,8 +1,8 @@
 angular.module('gameMaster', ['gameMaster.controllers', 'gameMaster.services', 'gameMaster.castServices']);
 //all display changes still need to be written in -- all internal except the basic test at the moment.
 angular.module('gameMaster.controllers', [])
-	.controller('gameController', ['$scope', '$log', 'imageProvider', 'messageSender', 'messageReceiver', 'eventService', 'stateManager'
-		function($scope, $log, imageProvider, messageSender, messageReceiver, eventService, stateManager) {
+	.controller('gameController', ['$scope', '$log', 'imageProvider', 'messageSender', 'messageReceiver', 'eventService', 'stateManager', 'promptProvider',
+		function($scope, $log, imageProvider, messageSender, messageReceiver, eventService, stateManager, promptProvider) {
 	     
 	      	$scope.message = 'Waiting for Marco';
 	      	$scope.hulk = imageProvider.getPic('waiting');
@@ -10,41 +10,37 @@ angular.module('gameMaster.controllers', [])
 	      	$scope.players = [];
 	      	$scope.things = [];
 	      	$scope.wrongGuesses = [];
-	      	$scope.prompt;
-	      	$scope.prompts = {prompt1:null,vote1:0,prompt2:null,vote2:0,prompt3:null,vote3:0};
-	      	$scope.currentResults = [];
-	      	var playerCount = 0;
-	      	var unguessedCount;
-	      	var stateCount = 0;
+	      	$scope.prompts;
+	      	$scope.thing;
+	      	var wrongCount = 0;
+	      	var unguessedCount = 0;
 	      	var currentPlayer = 0;
 	      	var playerMin = 5;
-
-	      	eventService.subscribe("test", function(args){
-	      		$scope.message = args.message;
-	      		messageSender.sendTest({senderId: args.senderId, message: "Polo"});
-	      	});
+	      	var gameNameRequested = false;
 
 	      	//player join handler
-	      	eventService.subscribe("playerJoined", function(args){
-	      		if(playerCount===0){
-	      			stateManager.changeState("waitingForStart");
-	      		}
-	      		if($scope.gamename = null){
+	      	this.playerJoinHandler = function(args){
+	      		if(!gameNameRequested){
+	       			stateManager.setState("waitingForStart");
 	      			messageSender.requestGameName({senderId:args.senderId, message: "Please name your game!"});
+	      			gameNameRequested = true;
 	      		}
 	      		else{
 	      			messageSender.requestPlayerName({senderId:args.senderId, message: "What is your name?"});
 	      		}
-	      	});
+	      	}
+	      	eventService.subscribe("playerJoined", this.playerJoinHandler);
 
-	      	//game namer will need a player name still
-	      	eventService.subscribe("gamenameReceived", function(args){
+	      	//game name received handler
+	      	this.gamenameReceivedHandler = function(args){
+	      		$scope.gamename = args.message;
 	      		messageSender.requestPlayerName({senderId:args.senderId, message: "What is your name?"});
-	      	});
+	      	}	      	
+	      	eventService.subscribe("gamenameReceived", this.gamenameReceivedHandler);
 
-	      	//handles new players after name received
-	      	eventService.subscribe("playernameReceived", function(args){
-	      		$scope.players[playerCount] = {status: "notReady",
+	      	//player name received handler
+	      	this.playernameReceivedHandler =  function(args){
+	      		$scope.players[stateManager.playerCount] = {status: "notReady",
 	      			score: 0,
 	      			senderId: args.senderId,
 	      			name: args.message,
@@ -54,53 +50,58 @@ angular.module('gameMaster.controllers', [])
 	      		//if the game is already in progress, will have the player wait for the next game
 	      		if(stateManager.state!=="waitingForReady"&&stateManager.state!=="waitingForStart"){
 	      			messageSender.sendStandby({senderId:args.senderId, message: "Waiting for the next round."});
-	      			$scope.players[playerCount].status = "standingBy";
+	      			$scope.players[stateManager.playerCount].status = "standingBy";
 	      		}
-	      		else if(playerCount===playerMin-1{
-	      			stateManager.changeState("waitingForReady");
+	      		else if(stateManager.playerCount===playerMin-1) {
+	      			stateManager.setState("waitingForReady");
 	      		}
-	      		playerCount++;
-	      	});
-
-	      	//request ready when waitingForReady state is reached
-	      	eventService.subscribe("waitingForReady", function(args){
+	      		stateManager.playerCount++;
+	      	};
+	      	eventService.subscribe("playernameReceived", this.playernameReceivedHandler);
+	      	
+			//request ready when waitingForReady state is reached
+			this.waitingForReadyHandler = function(){
 	      		for(var i = 0; i < $scope.players.length; i++){
 	      			if($scope.players[i].status!=="quit"){
-	      				messageSender.requestReady({senderId:$scope.players[i].senderId, "Ready Up!");
+	      				messageSender.requestReady({senderId:$scope.players[i].senderId, message:"Ready Up!"});
 	      			}
 	      		}
-	      	});
+	      	};
+	      	eventService.subscribe("waitingForReady", this.waitingForReadyHandler);
 
 	      	//tallies ready players and moves state when all elegible players are ready
-	      	eventService.subscribe("readyReceived", function(args){
+	      	this.readyReceivedHandler = function(args){
 	      		for(var i = 0; i < $scope.players.length; i++){
 	      			if($scope.players[i].senderId===args.senderId && args.message==="Ready"){;
 	      				$scope.players[i].status="ready";
-	      				stateCount++;
+	      				stateManager.stateCount++;
 	      			}
-	      			if(stateCount===playerCount){
-	      				stateManager.changeState("waitingForVote")
-	      				stateCount=0;
+	      			if(stateManager.stateCount===stateManager.playerCount){
+	      				stateManager.setState("waitingForVote")
+	      				stateManager.stateCount=0;
 	      			}
 	      		}
-	      	});
+	      	};
+	      	eventService.subscribe("readyReceived", this.readyReceivedHandler);
 
 	      	//sends prompts to be voted on
-	      	eventService.subscribe("waitingForVote", function(args){
+	      	this.waitingForVoteHandler = function(){
 	      		//var prompts = getPrompts();
 	      		for(var i = 0; i < $scope.players.length; i++){
-	      			//grabs players who were waiting for the next round;
+	      			$scope.prompts = promptProvider.getPrompts();
 	      			if($scope.players[i].status==="ready"||$scope.players[i].status==="standingBy"){
-	      				if($scope.players[i].status==="sdandingBy")
-	      					playerCount++;
-	      				messageSender.requestPrompt($scope.players[i].senderId, JSON.stringify({prompt1:$scope.prompt1,prompt2:$scope.prompt2,prompt3:$scope.prompt3));
+	      				//brings in any players who have been standing in for round end
+	      				if($scope.players[i].status==="standingBy")
+	      					stateManager.playerCount++;
+	      				messageSender.requestPrompt($scope.players[i].senderId, JSON.stringify($scope.prompts));
 	      				$scope.players[i].status="voting";
 	      			}
 	      		}
-	      	});
+	      	};
+	      	eventService.subscribe("waitingForVote", this.waitingForVoteHandler);
 	      	
 	      	//tallies votes on prompts and triggers state change when all votes received
-	      	eventService.subscribe("promptReceived", function(args){
+	      	this.voteReceivedHandler = function(args){
 	      		for(var i = 0; i < $scope.players.length; i++){
 	      			if($scope.players[i].senderId===args.senderId){
 	      				$scope.players[i].status="waiting";
@@ -114,137 +115,155 @@ angular.module('gameMaster.controllers', [])
 							default:
 								$scope.prompts.vote3++;
 						}
-	      				stateCount++
+	      				stateManager.stateCount++
 	      			}
 	      		}
-	      		if(stateCount===playerCount){
-	      			stateManager.changeState("waitingForThing");
-	      			stateCount=0;
+	      		if(stateManager.stateCount===stateManager.playerCount){
+	      			stateManager.setState("waitingForThing");
+	      			stateManager.stateCount=0;
 	      			if($scope.prompts.vote1>$scope.prompts.vote2 && $scope.prompts.vote1>$scope.prompts.vote3){
-	      				$scope.prompt = $scope.prompts.prompt1;
+	      				$scope.thing = $scope.prompts.prompt1;
 	      			}
 	      			else if($scope.prompts.vote2>$scope.prompts.vote1 && $scope.prompts.vote2>$scope.prompts.vote3){
-	      				$scope.prompt = $scope.prompgs.prompt2;
+	      				$scope.thing = $scope.prompgs.prompt2;
 	      			}
 	      			else if($scope.prompts.vote3>$scope.prompts.vote1 && $scope.prompts.vote3>$scope.prompts.vote2){
-	      				$scope.prompt = $scope.prompts.prompt3;
+	      				$scope.thing = $scope.prompts.prompt3;
 	      			}
 	      			else if($scope.prompts.vote1!==$scope.prompts.vote2 && $scope.prompts.vote1===$scope.prompts.vote3){
 	      				if(Math.random()<0.5){
-	      					$scope.prompt = $scope.prompts.prompt1;
+	      					$scope.thing = $scope.prompts.prompt1;
 	      				}
 	      				else{
-	      					$scope.prompt = $scope.prompts.prompt3;
+	      					$scope.thing = $scope.prompts.prompt3;
 	      				}
 	      			}
 	      			else if($scope.prompts.vote1!==$scope.prompts.vote3 && $scope.prompts.vote1===$scope.prompts.vote2){
 	      				if(Math.random()<0.5){
-	      					$scope.prompt = $scope.prompts.prompt1;
+	      					$scope.thing = $scope.prompts.prompt1;
 	      				}
 	      				else{
-	      					$scope.prompt = $scope.prompts.prompt2;
+	      					$scope.thing = $scope.prompts.prompt2;
 	      				}
 	      			}
 	      			else if($scope.prompts.vote1!==$scope.prompts.vote2 && $scope.prompts.vote2===$scope.prompts.vote3){
 	      				if(Math.random()<0.5){
-	      					$scope.prompt = $scope.prompts.prompt2;
+	      					$scope.thing = $scope.prompts.prompt2;
 	      				}
 	      				else{
-	      					$scope.prompt = $scope.prompts.prompt3;
+	      					$scope.thing = $scope.prompts.prompt3;
 	      				}
 	      			}
 	      			else{
 	      				switch(Math.floor(Math.random()*3) + 1){
 	      					case 1:
-	      						$scope.prompt = $scope.prompts.prompt1;
+	      						$scope.thing = $scope.prompts.prompt1;
 	      						break;
       						case 2:
-      							$scope.prompt = $scope.prompts.prompt2;
+      							$scope.thing = $scope.prompts.prompt2;
       							break;
   							default:
-  								$scope.prompt = $scope.prompts.prompt3;
+  								$scope.thing = $scope.prompts.prompt3;
 	      				}
 	      			}
-	      			$scope.prompts = null;
-	      			stateCount = 0;
-	      			unguessedCount = playerCount;
+	      			stateManager.stateCount = 0;
+	      			unguessedCount = stateManager.playerCount;
 	      		}
-	      	});
+	      	};
+	      	eventService.subscribe("voteReceived", this.voteReceivedHandler);
 
 	      	//sends request for response to prompt
-	      	eventService.subscribe("waitingForThing", function(args){
+	      	this.waitingForThingHandler = function(){
 	      		for(var i = 0; i < $scope.players.length; i++){
-	      			if($scope.players[i].status==="waiting" && $scope.players[i].guessedThisRound===false){
-	      				messageSender.requestThing({senderId:$scope.players[i]), message:$scope.prompt});
+	      			if($scope.players[i].status==="waiting"){
+	      				messageSender.requestThing({senderId:$scope.players[i].senderdisconnected, message:$scope.thing});
 	      				$scope.players[i].status="writing";
 	      			}
 	      		}
-	      	});
+	      	};
+	      	eventService.subscribe("waitingForThing", this.waitingForThingHandler);
 
 			//handles prompt responses, haha
-			eventService.subscribe("thingReceived", function(args){
+			this.thingReceivedHandler = function(args){
 				for(var i = 0; i < $scope.players.length; i++){
 					if($scope.players[i].senderId===args.senderId){
-						$scope.things.push({writer:$scope.players[i].name,thing:args.message, guessedThisTurn: null, guesser: [], turnsUnguessed: 0);
+						$scope.things.push({writer:$scope.players[i].name,thing:args.message, guessedThisTurn: false, guesser: [], turnsUnguessed: 0, randomPosition: 0});
 						$scope.players[i].status="waiting";
-						stateCount++;
+						stateManager.stateCount++;
 					}
 				}
-				if(stateCount===playerCount){
-					//shuffle "things" before displaying it
-					stateManager.changeState("waitingForGuesses");
-					stateCount=0;
+				if(stateManager.stateCount===stateManager.playerCount){
+					//shuffle things
+					var thingHolder;
+					for(var i = 0; i < $scope.things.length; i++){
+						$scope.things[i].randomPosition = Math.random();
+					}
+					for(var i = 0; i < $scope.things.length; i++){
+						for(var j = i; j > 0; j--){
+							if($scope.things[j].randomPosition < $scope.things[j-1].randomPosition){
+								thingHolder = $scope.things[j];
+								$scope.things[j] = $scope.things[j-1];
+								$scope.things[j-1] = thingHolder;
+							}
+						}
+					}
+					stateManager.setState("waitingForGuesses");
+					stateManager.stateCount=0;
+					wrongCount = 0;
 				}
-			});
+			};
+			eventService.subscribe("thingReceived", this.thingReceivedHandler);
 
 			//requests the player's guess
-			eventService.subscribe("waitingForGuesses", function(args){
+			this.waitingForGuessesHandler =  function(){
 				for(var i = 0; i < $scope.players.length; i++){
 					if($scope.players[i].status==="waiting"){
-						messageSender($scope.players[i].senderId, JSON.stringify($scope.things));
-						$scope.players[i].status = "guessing");
+						messageSender.requestGuess({senderId: $scope.players[i].senderId, message: JSON.stringify($scope.things)});
+						$scope.players[i].status = "guessing";
 					}
 				}
-			});
+			};
+			eventService.subscribe("waitingForGuesses", this.waitingForGuessesHandler);
 			
 			//handles received guesses
-			eventService.subscribe("guessReceived", function(args){
+			this.guessReceivedHandler = function(args){
 				for(var i = 0; i < $scope.players.length; i++){
 					var guess = angular.fromJson(args.message)
+
 					if($scope.players[i].senderId===args.senderId){
-						var correct = false;
-						var exists = false;
 						//evaluates guesses and sorts them into things for correct guesses and wrongGuesses if not.
 						for(var j = 0; j < $scope.things.length; j++){
 							correct = false;
 							exists = false;
-							if(guess.thing===$scope.things[j].thing && guess.writer===$scope.things[j].writer){
+							if(guess.thing===$scope.things[j].thing && guess.writer===$scope.things[j].writer && guess.writer!==$scope.players[i].playername){
 								correct = true;
 								$scope.things[j].guessedThisTurn = true;
 								$scope.things[j].guesser.push($scope.players[i].playername);
 							}
 							if(!correct){
-								for(var k = 0; k < $scope.wrongGuesses.length; k++){
-									for(var l = 0; l < $scope.wrongGuesses.length; l++){
+								for(var k = 0; k < wrongCount; k++){
+									for(var l = 0; l < wrongCount; l++){
 										if(guess.thing===$scope.wrongGuesses[k].thing && (guess.writer===$scope.wrongGuesses[l].writer)){
 											exists=true;
-											wrongGuesses[k].guesser.push($scope.players[i].playername);
+											$scope.wrongGuesses[k].guesser.push($scope.players[i].playername);
 										}
 									}
 								}
-								if(!exists){
-									wrongGuesses.push({thing:guess.thing, writer:guess.writer, guesser[$scope.players[i].playername]});
-								}
-							}
-						}						
+								if(!exists)
+									$scope.wrongGuesses[wrongCount] = ({thing:guess.thing, writer:guess.writer, guesser:[$scope.players[i].playername]});
+								wrongCount++;
+							}	
+				 			}						
 						$scope.players[i].status="waiting";
-						stateCount++;
+						stateManager.stateCount++;
 					}
 				}
-				if(stateCount===playerCount){
-					stateManager.changeState("roundResults");
+				if(stateManager.stateCount===stateManager.playerCount){
+					this.cleanout();
+					stateManager.setState("roundResults");
 				}
-			});
+			};
+			eventService.subscribe("guessReceived", this.guessReceivedHandler);
 
 			//resolves guesses w/displays and scores
 			eventService.subscribe("roundResults", function(args){
@@ -295,49 +314,71 @@ angular.module('gameMaster.controllers', [])
 				}
 				//display results and assign points for votes, point handler will send score updates to individual players
 				//if point handling results in player exceeding point threshold
-				//stateManager.changeState("endGame");
+				//stateManager.setState("endGame");
 				//else
-				stateManager.changeState("waitingForVote");
+				this.cleanout();
+				stateManager.setState("waitingForVote");
 			});
 			
 			//handles end game
 			eventService.subscribe("endGame", function(args){
 				for(var i = 0; i < $scope.players.length; i++){
 					if($scope.players[i].status==="waiting"){
-						messageSender.sendEnd($scope.players[i].senderId, /*scoreHandler.winner + " won the game with " + scoreHandler.highscore
-							+ " points!\n*/You had " + $scope.players[i].score) points!");
+						messageSender.sendEnd($scope.players[i].senderId, "You had " + $scope.players[i].score + " points!");
+						/*scoreHandler.winner + " won the game with " + scoreHandler.highscore + " points!\n*/
 					}
 				}
-				stateManager.changeState("waitingForReady");
+				stateManager.setState("waitingForReady");
 			});
 
 			//handles player quit
-			eventService.susbscribe("playerQuit", function(args){
+			this.playerQuit = function(args){
 				for(var i = 0; i < $scope.players.length; i++){
 					if(args.senderId===$scope.players[i].senderId){
 						$scope.players[i].quit=true;
 						//change the player's display
 						switch(stateManater.state){
 							case "waitingForStart" || "waitingForReady":
+								$log.log("Player " + $scope.players[i].playername + "quit, sender ID " + $scope.players[i].senderId);
 								$scope.players = $scope.players.slice(i+1);
 								break;
 							case "waitingForVote":
+								if($scope.players[i].status==="waiting"){
+									stateManager.stateCount--;
+								}
+								$log.log("Player " + $scope.players[i].playername + "quit, sender ID " + $scope.players[i].senderId);
 								$scope.players = $scope.players.slice(i+1);
-								playerCount--;
+								stateManager.playerCount--;
 								break;
 							case "waitingForGuesses" || "waitingForThing":
 								if($scope.players[i].status!=="waiting"){
+									$log.log("Player " + $scope.players[i].playername + "quit, sender ID " + $scope.players[i].senderId);
 									$scope.players = $scope.players.slice(i+1);
-									playerCount--;
+									stateManager.stateCount--;
+									stateManager.playerCount--;
 								}				
 								else{
 									//figure out how to handle this
+									$scope.players[i].quit = true;
+									$log.log("Player " + $scope.players[i].playername + "quit pended, sender ID " + $scope.players[i].senderId);
 								}
 								break;
 						}
 					}
 				}
-			});
+			};
+			//removes players who were marked for quit, but were tied into the curernt events
+			this.cleanout = function(){
+				for(var i = 0; i < $scope.players.length; i++){
+					if($scope.players.quit){
+						$log.log("Player " + $scope.players[i].playername + "quit, sender ID " + $scope.players[i].senderId);
+						$scope.players = $scope.players.slice(i+1);
+					}
+				}
+			};
+			eventService.subscribe("playerQuit", this.playerQuit);
+
+
   	}]);
 
 angular.module('gameMaster.services', [])
@@ -364,17 +405,17 @@ angular.module('gameMaster.services', [])
   	.service('eventService', function($log){
   		this.subs = {};
   		this.subscribe = function(eventId, subscriber){
-  			if(!this.subs.eventID){
-  				this.subs[eventID] = [];
+  			if(!this.subs.eventId){
+  				this.subs[eventId] = [];
   			}
   			this.subs[eventId].push(subscriber);
   		};
   		this.publish = function(eventId, args){
-  			if(!this.subs.eventID){
+  			if(!this.subs.eventId){
   				$log.log('Invalid eventId published: ' + eventId);
   			}
   			else{
-  				for(var i = 0; i > this.subs[eventID].length; i ++){
+  				for(var i = 0; i > this.subs[eventId].length; i ++){
   					this.subs[eventId][i](args);
   				}
   			}
@@ -383,18 +424,27 @@ angular.module('gameMaster.services', [])
   	//manages the state of the game
   	.service('stateManager', function(eventService, $log){
   		this.state = null;
-  		this.changeState = function(newState){
+  		this.stateCount = 0;
+  		this.playerCount = 0;
+  		this.setState = function(newState){
   			if(this.state!==newState){
   				this.state = newState;
   				$log.log("New gamestate entered: " + this.state);
   				eventService.publish(this.state, this.state);
   			}
   		};
+  	})
+  	//provides prompts for the game
+  	.service('promptProvider', function($log){
+  		this.getPrompts = function(request){
+  			//in here have logic for ajax call for prompt retrieval from DB
+  			return {vote1: 0, vote2: 0, vote3: 0, 
+  				prompt1: 'prompt1', prompt2: 'prompt2', prompt3: 'prompt3'};
+  		}
   	});
-
 angular.module('gameMaster.castServices', [])
-  	.value('cast', cast)
-  	.factory('castMessageBus', function(cast, channels, messagetypes, eventService, $log) {
+	.constant('cast', window.cast)
+  	.factory('castMessageBus', function(cast, messagetypes, eventService, $log) {
 
 	    // start up chromecast
 	    cast.receiver.logger.setLevelValue(0);
@@ -433,12 +483,9 @@ angular.module('gameMaster.castServices', [])
 	    //initializing channel collection
 	    var messageBuses = [];
 
-	    //fills the test channel for the current sender app
-	  	messageBus['test'] = 'urn:x-cast:com.pt.basic';
-
 	  	for(var i = 0; i < messagetypes.length; i++){
 	  		messageBuses[messagetypes[i]] = castReceiverManager.getCastMessageBus('urn:x-cast:com.partythings.' + messagetypes[i]);
-	  		$log.log(messageBus[messagetypes[i]].getNamespace());
+	  		$log.log(messageBuses[messagetypes[i]].getNamespace());
 	  	}    
 
 
@@ -449,10 +496,6 @@ angular.module('gameMaster.castServices', [])
 	    return messageBuses;
  	})
 	.service('messageSender', function(castMessageBus, $log){
-		//test channel
-		this.sendTest = function(event){
-			castMessageBus.test.send(event.senderId, event.message);
-		}
 
 		//request gamename from player
 		this.requestGameName = function(event) {
@@ -505,10 +548,7 @@ angular.module('gameMaster.castServices', [])
 		};
 	})
 	.service('messageReceiver', function(castMessageBus, eventService, $log){
-		//test message handler
-		castMessageBus.test.onMessage = function(event){
-			eventService.publish("test", {senderId: event.senderId, message: event.data})
-		};
+		
 		//gamename received
 		castMessageBus.gamename.onMessage = function(event){
 			eventService.publish("gamenameReceived", {senderId: event.senderId, message: event.data});
@@ -523,7 +563,7 @@ angular.module('gameMaster.castServices', [])
 		};
 		//prompt received
 		castMessageBus.prompt.onMessage = function(event){
-			eventService.publish("promptReceived", {senderId: event.senderId, message: event.data});
+			eventService.publish("voteReceived", {senderId: event.senderId, message: event.data});
 		};
 		//thing received
 		castMessageBus.thing.onMessage = function(event){
@@ -542,4 +582,4 @@ angular.module('gameMaster.castServices', [])
 			eventService.publish("quitReceived", {senderId: event.senderId, message: event.data});
 		};
 	})
-	.constant('messagetypes', ['gamename','playername','ready','prompt','standby','thing','guess','result',end', 'quit']);
+	.constant('messagetypes', ['gamename','playername','ready','prompt','standby','thing','guess','result','end', 'quit']);
