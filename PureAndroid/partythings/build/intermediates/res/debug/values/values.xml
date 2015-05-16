@@ -389,6 +389,7 @@
     <!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="hello_world">This is a rockstar test!</string>
+    <string name="hello_world2">!test rockstar a is This</string>
     <!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/build/intermediates/exploded-aar/PureAndroid/CastCompanionLibrary-android-master/unspecified/release/res/values/values.xml -->
     <eat-comment/>
     <string name="info_na">Information Not Available</string>

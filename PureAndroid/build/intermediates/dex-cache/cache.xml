@@ -2,17 +2,10 @@
 <items version="2" >
 
     <item
-        jar="E:\src\PartyThings\PureAndroid\partythings\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\6.5.87\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="34f2a2f0845b86e4f30fb718a4fbd279951ed91a">
-        <dex dex="E:\src\PartyThings\PureAndroid\partythings\build\intermediates\pre-dexed\debug\classes-da309cf4b35377b7ff2f05d4730fc215ba722913.jar" />
-    </item>
-    <item
         jar="E:\src\PartyThings\PureAndroid\partythings\build\intermediates\exploded-aar\PureAndroid\CastCompanionLibrary-android-master\unspecified\release\classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="5b9eebbc17b86674fa2e24092a4a875ab35db163">
+        sha1="326207eb92efae9652f49ff6565398de047e2657">
         <dex dex="E:\src\PartyThings\PureAndroid\partythings\build\intermediates\pre-dexed\debug\classes-9c79c7f0fa358aad8d7dd4ab4539d46f8eb3b369.jar" />
     </item>
     <item
@@ -56,6 +49,13 @@
         revision="21.1.2"
         sha1="95482e7c792a7c0d5a9d5461e97726bd54fe9549">
         <dex dex="E:\src\PartyThings\PureAndroid\partythings\build\intermediates\pre-dexed\debug\classes-46ad85a7f2d52a011b6cea9bbdf98b52295afab4.jar" />
+    </item>
+    <item
+        jar="E:\src\PartyThings\PureAndroid\partythings\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\6.5.87\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="34f2a2f0845b86e4f30fb718a4fbd279951ed91a">
+        <dex dex="E:\src\PartyThings\PureAndroid\partythings\build\intermediates\pre-dexed\debug\classes-da309cf4b35377b7ff2f05d4730fc215ba722913.jar" />
     </item>
     <item
         jar="E:\src\PartyThings\PureAndroid\partythings\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
