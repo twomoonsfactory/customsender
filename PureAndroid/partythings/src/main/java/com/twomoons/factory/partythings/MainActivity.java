@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-public class MainActivity extends ActionBarActivity implements IView {
+public class MainActivity extends ActionBarActivity implements IView, IMsgHandler {
 
     private TextView mText;
     private ICommunicator mCommunicator;
@@ -31,21 +31,25 @@ public class MainActivity extends ActionBarActivity implements IView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Button button = (Button) findViewById(R.id.click_me_button);
-        final RelativeLayout lay1 = (RelativeLayout) findViewById(R.id.text1Layout);
-        final RelativeLayout lay2 = (RelativeLayout) findViewById(R.id.text2Layout);
+//        final Button button = (Button) findViewById(R.id.click_me_button);
+//        final RelativeLayout lay1 = (RelativeLayout) findViewById(R.id.text1Layout);
+//        final RelativeLayout lay2 = (RelativeLayout) findViewById(R.id.text2Layout);
+//
+//        mText = (TextView) findViewById(R.id.displayText);
+//        button.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View v){
+//                int v1 = lay1.getVisibility();
+//                int v2 = lay2.getVisibility();
+//                lay1.setVisibility(v2);
+//                lay2.setVisibility(v1);
+//            }
+//        });
 
-        mText = (TextView) findViewById(R.id.displayText);
-        button.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                int v1 = lay1.getVisibility();
-                int v2 = lay2.getVisibility();
-                lay1.setVisibility(v2);
-                lay2.setVisibility(v1);
-            }
-        });
+        Hub communicationHub = new Hub();
 
-        mCommunicator.Initialize(this);
+        mCommunicator.Initialize(this, communicationHub);
+
+        communicationHub.RegisterMsgr(this, CommunicatorEvents.PlayerNameSent);
 
         setupResponseAdapter();
     }
@@ -96,5 +100,10 @@ public class MainActivity extends ActionBarActivity implements IView {
     public void onPause(){
 
         super.onPause();
+    }
+
+    @Override
+    public void HandleMessage(CommunicatorEvents eventType, String message) {
+
     }
 }

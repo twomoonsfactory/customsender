@@ -9,4 +9,4 @@
         app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
         app:showAsAction="always"/>
 </menu>
-<!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/src/main/res/menu/menu_main.xml -->
+<!-- From: file:/C:/Users/Joshua/Documents/GitHub/gameofthings/PureAndroid/partythings/src/main/res/menu/menu_main.xml -->
