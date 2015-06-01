@@ -1,10 +1,10 @@
 package com.twomoons.factory.partythings;
 
 public enum CommunicatorEvents {
-    WaitingForPlayer,
-    WaitingForName,
-    WaitingForPrompt,
-    WaitingForResponse,
-    ResponseSent,
-    PlayerNameSent,
+    EnterResponseEnter,
+    EnterResponseExit,
+    EnterGameEnter,
+    EnterGameExit,
+    EnterGameNameEnter,
+    EnterGameNameExit
 }

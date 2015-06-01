@@ -15,6 +15,7 @@ public class MainActivity extends ActionBarActivity implements IView, IMsgHandle
 
     private TextView mText;
     private ICommunicator mCommunicator;
+    private Hub communicationHub;
 
     public MainActivity() {
           mCommunicator = new CastService();
@@ -45,13 +46,22 @@ public class MainActivity extends ActionBarActivity implements IView, IMsgHandle
 //            }
 //        });
 
-        Hub communicationHub = new Hub();
+         communicationHub = new Hub();
 
         mCommunicator.Initialize(this, communicationHub);
 
         communicationHub.RegisterMsgr(this, CommunicatorEvents.PlayerNameSent);
 
         setupResponseAdapter();
+
+        setupPaneHooks();
+    }
+
+    public View getViewById(int id){return findViewById(id);}
+
+    private void setupPaneHooks() {
+        GetHookEnterResponsePane enterResponsePane = new GetHookEnterResponsePane(this,communicationHub);
+        GetHookEnterGamePane enterGamePane = new GetHookEnterGamePane(this,communicationHub);
     }
 
     private void setupResponseAdapter() {

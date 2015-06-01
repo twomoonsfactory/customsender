@@ -82,10 +82,6 @@ public class CastService extends MediaRouter.Callback implements ICommunicator, 
 //        }
 //    }
 
-    @Override
-    public List<CommunicatorEvents> GetHandledTypes() {
-        return null;
-    }
 
     @Override
     public void HandleMessage(CommunicatorEvents eventType, String message) {
