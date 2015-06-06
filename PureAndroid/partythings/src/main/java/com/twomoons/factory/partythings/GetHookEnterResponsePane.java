@@ -12,21 +12,21 @@ import android.widget.TextView;
 public class GetHookEnterResponsePane implements IMsgHandler{
     private final Hub hub;
     private final MainActivity ctx;
-    private final View pane;
-    private final TextView responseText;
-    private final TextView responsePrompt;
-    private final TextView responseEdit;
-    private final Button responseButton;
+    private final View ghEnterResponsePane;
+    private final TextView ghEnterResponseText;
+    private final TextView ghEnterResponsePromptText;
+    private final EditText ghEnterResponseEdit;
+    private final Button ghResponse_Button;
 
 
     public GetHookEnterResponsePane(MainActivity ctx, Hub communicationHub) {
         this.ctx = ctx;
         this.hub = communicationHub;
-        this.pane = ctx.getViewById(R.id.enterResponsePane);
-        this.responsePrompt = (TextView) ctx.getViewById(R.id.enterResponsePromptText);
-        this.responseText = (TextView) ctx.getViewById(R.id.enterResponseText);
-        this.responseEdit = (EditText) ctx.getViewById(R.id.enterResponseEdit);
-        this.responseButton = (Button) ctx.getViewById(R.id.response_button);
+        this.ghEnterResponsePane = ctx.getViewById(R.id.enterResponsePane);
+        this.ghEnterResponsePromptText = (TextView) ctx.getViewById(R.id.enterResponsePromptText);
+        this.ghEnterResponseText = (TextView) ctx.getViewById(R.id.enterResponseText);
+        this.ghEnterResponseEdit = (EditText) ctx.getViewById(R.id.enterResponseEdit);
+        this.ghResponse_Button = (Button) ctx.getViewById(R.id.response_button);
         setupListener();
     }
 
@@ -35,17 +35,17 @@ public class GetHookEnterResponsePane implements IMsgHandler{
     }
 
     public void hidePane(){
-        pane.setVisibility(View.GONE);
+        ghEnterResponsePane.setVisibility(View.GONE);
     }
 
     public void showPane() {
-        pane.setVisibility(View.VISIBLE);
+        ghEnterResponsePane.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void HandleMessage(CommunicatorEvents eventType, String message) {
         if(eventType == CommunicatorEvents.EnterResponseEnter) {
-            responsePrompt.setText(message);
+            ghEnterResponsePromptText.setText(message);
             showPane();
         }
     }

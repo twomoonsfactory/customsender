@@ -11,24 +11,24 @@ import android.widget.TextView;
 public class GetHookGameNamePane implements IMsgHandler{
     private final Hub hub;
     private final MainActivity ctx;
-    private final View pane;
-    private final TextView gameNameText;
-    private final EditText nameEditText;
+    private final View ghGameNamePane;
+    private final TextView ghEnterGameNameText;
+    private final EditText ghEditText;
 
     public GetHookGameNamePane(MainActivity ctx, Hub communicationHub){
         this.ctx = ctx;
         this.hub = communicationHub;
-        this.pane = ctx.getViewById(R.id.gameNamePane);
-        this.gameNameText = (TextView) ctx.getViewById(R.id.enterGameNameText);
-        this.nameEditText = (EditText) ctx.getViewById(R.id.editText);
+        this.ghGameNamePane = ctx.getViewById(R.id.gameNamePane);
+        this.ghEnterGameNameText = (TextView) ctx.getViewById(R.id.enterGameNameText);
+        this.ghEditText = (EditText) ctx.getViewById(R.id.editText);
         setupListener();
     }
 
     private void setupListener() { hub.RegisterMsgr(this,CommunicatorEvents.EnterGameNameEnter); }
 
-    public void hidePane(){ pane.setVisibility(View.GONE); }
+    public void hidePane(){ ghGameNamePane.setVisibility(View.GONE); }
 
-    public void showPane(){ pane.setVisibility(View.VISIBLE);}
+    public void showPane(){ ghGameNamePane.setVisibility(View.VISIBLE);}
 
     @Override
     public void HandleMessage(CommunicatorEvents eventType, String message) {

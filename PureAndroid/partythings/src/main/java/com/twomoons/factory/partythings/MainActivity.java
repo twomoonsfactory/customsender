@@ -62,6 +62,14 @@ public class MainActivity extends ActionBarActivity implements IView, IMsgHandle
     private void setupPaneHooks() {
         GetHookEnterResponsePane enterResponsePane = new GetHookEnterResponsePane(this,communicationHub);
         GetHookEnterGamePane enterGamePane = new GetHookEnterGamePane(this,communicationHub);
+        GetHookNotConnectedPane notConnectedPane = new GetHookNotConnectedPane(this,communicationHub);
+        GetHookPickResponsePane pickResponsePane = new GetHookPickResponsePane(this,communicationHub);
+        GetHookPickPlayerPane pickPlayerPane = new GetHookPickPlayerPane(this,communicationHub);
+        GetHookPromptSelectionPane promptSelectionPane = new GetHookPromptSelectionPane(this,communicationHub);
+        GetHookGameNamePane gameNamePane = new GetHookGameNamePane(this,communicationHub);
+        GetHookWaitingPane waitingPane = new GetHookWaitingPane(this,communicationHub);
+        GetHookReadyPane readyPane = new GetHookReadyPane(this,communicationHub);
+        GetHookResultsPane resultsPane = new GetHookResultsPane(this,communicationHub);
     }
 
     private void setupResponseAdapter() {

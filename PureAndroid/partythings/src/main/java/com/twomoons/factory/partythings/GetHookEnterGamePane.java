@@ -12,31 +12,31 @@ import android.widget.TextView;
 public class GetHookEnterGamePane implements IMsgHandler{
     private final Hub hub;
     private final MainActivity ctx;
-    private final View pane;
-    private final TextView createText;
-    private final TextView createPlayerNameText;
-    private final EditText createEditText2;
-    private final Button createButton;
+    private final View ghEnterGamePane;
+    private final TextView ghCreateGameText;
+    private final TextView ghEnterPlayerNameText;
+    private final EditText ghEditText2;
+    private final Button ghCreateGameButton;
 
 
     public GetHookEnterGamePane(MainActivity ctx, Hub communicationHub){
         this.ctx = ctx;
         this.hub = communicationHub;
-        this.pane = ctx.getViewById(R.id.enterGamePane);
-        this.createText = (TextView) ctx.getViewById(R.id.createGameText);
-        this.createPlayerNameText = (TextView) ctx.getViewById(R.id.enterPlayerNameText);
-        this.createEditText2 = (EditText) ctx.getViewById(R.id.editText2);
-        this.createButton = (Button) ctx.getViewById(R.id.createGameButton);
+        this.ghEnterGamePane = ctx.getViewById(R.id.enterGamePane);
+        this.ghCreateGameText = (TextView) ctx.getViewById(R.id.createGameText);
+        this.ghEnterPlayerNameText = (TextView) ctx.getViewById(R.id.enterPlayerNameText);
+        this.ghEditText2 = (EditText) ctx.getViewById(R.id.editText2);
+        this.ghCreateGameButton = (Button) ctx.getViewById(R.id.createGameButton);
         setupListener();
     }
 
     private void setupListener() { hub.RegisterMsgr(this,CommunicatorEvents.EnterGameEnter); }
 
     public void hidePane(){
-        pane.setVisibility(View.GONE);
+        ghEnterGamePane.setVisibility(View.GONE);
     }
 
-    public void showPane() { pane.setVisibility(View.VISIBLE); }
+    public void showPane() { ghEnterGamePane.setVisibility(View.VISIBLE); }
 
     @Override
     public void HandleMessage(CommunicatorEvents eventType, String message) {
