@@ -25,7 +25,7 @@ public class ItemSelectionAdapter extends ArrayAdapter<SelectionItem> {
         super(context, layoutResourceId);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
-        this.items = items;
+//        this.items = items;
     }
 
     @Override

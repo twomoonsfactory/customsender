@@ -12,6 +12,7 @@ import com.google.sample.castcompanionlibrary.cast.exceptions.NoConnectionExcept
 import com.google.sample.castcompanionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,12 +22,23 @@ public class CastService extends MediaRouter.Callback implements ICommunicator, 
 
     private DataCastManager mCaster;
     private String mNamespace = "urn:x-cast:com.pt.basic";
+    private IHub _messageHub;
 
     @Override
-    public void Initialize(Context ctx) {
+    public void Initialize(Context ctx, IHub messageHub) {
         mCaster = DataCastManager.initialize(ctx, "285A9A14", mNamespace);
         //mCaster.enableFeatures(DataCastManager.FEATURE_WIFI_RECONNECT);
         mCaster.addDataCastConsumer(new CastMessageConsumer());
+        _messageHub = messageHub;
+
+        _messageHub.RegisterMsgr(this, buildEventList());
+    }
+
+    private ArrayList<CommunicatorEvents> buildEventList(){
+        ArrayList<CommunicatorEvents> list =  new ArrayList<CommunicatorEvents>();
+        list.add(CommunicatorEvents.PlayerNameSent);
+        list.add(CommunicatorEvents.ResponseSent);
+        return list;
     }
 
     @Override
@@ -58,26 +70,37 @@ public class CastService extends MediaRouter.Callback implements ICommunicator, 
         mSelectedDevice = null;
     }
 
-    private void SendMessage() {
-        try{
-            mCaster.sendDataMessage("Marco", mNamespace);
-        } catch(IOException ex){
-            Log.e("MESSAGE_FAILED_IO", "Failed to send message: " + ex);
-        } catch(TransientNetworkDisconnectionException ex) {
-            Log.e("MESSAGE_FAILED_NET", "Failed to send message: " + ex);
-        } catch(NoConnectionException ex) {
-            Log.e("MESSAGE_FAILED_CONN", "Failed to send message: " + ex);
-        }
-    }
+//    private void SendMessage() {
+//        try{
+//            mCaster.sendDataMessage("Marco", mNamespace);
+//        } catch(IOException ex){
+//            Log.e("MESSAGE_FAILED_IO", "Failed to send message: " + ex);
+//        } catch(TransientNetworkDisconnectionException ex) {
+//            Log.e("MESSAGE_FAILED_NET", "Failed to send message: " + ex);
+//        } catch(NoConnectionException ex) {
+//            Log.e("MESSAGE_FAILED_CONN", "Failed to send message: " + ex);
+//        }
+//    }
 
-    @Override
-    public List<CommunicatorEvents> GetHandledTypes() {
-        return null;
-    }
 
     @Override
     public void HandleMessage(CommunicatorEvents eventType, String message) {
+        if(eventType == CommunicatorEvents.PlayerNameSent)
+        {
 
+        }
+    }
+
+    private void sendMessage(String message, String namespace){
+        try {
+            mCaster.sendDataMessage(message, namespace);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TransientNetworkDisconnectionException e) {
+            e.printStackTrace();
+        } catch (NoConnectionException e) {
+            e.printStackTrace();
+        }
     }
 
     private class CastMessageConsumer extends DataCastConsumerImpl {
