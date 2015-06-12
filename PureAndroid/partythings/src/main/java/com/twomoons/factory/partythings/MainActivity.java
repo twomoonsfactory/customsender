@@ -10,6 +10,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.twomoons.factory.partythings.Mocks.CastServiceMock;
+
 
 public class MainActivity extends ActionBarActivity implements IView, IMsgHandler {
 
@@ -18,9 +20,10 @@ public class MainActivity extends ActionBarActivity implements IView, IMsgHandle
     private Hub communicationHub;
 
     public MainActivity() {
-          mCommunicator = new CastService();
+          mCommunicator = new CastServiceMock();
     }
 
+    //Used by Unit Test only
     public MainActivity(ICommunicator communicator) {
         if(communicator == null) {
             mCommunicator = new CastService();
@@ -50,7 +53,7 @@ public class MainActivity extends ActionBarActivity implements IView, IMsgHandle
 
         mCommunicator.Initialize(this, communicationHub);
 
-        communicationHub.RegisterMsgr(this, CommunicatorEvents.PlayerNameSent);
+        communicationHub.RegisterMsgr(this, CommunicatorEvents.EnterGameNameEnter);
 
         setupResponseAdapter();
 

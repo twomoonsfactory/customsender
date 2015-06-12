@@ -24,7 +24,7 @@ public class GetHookPickResponsePane implements IMsgHandler {
     }
 
     private void setupListener() {
-        hub.RegisterMsgr(this,CommunicatorEvents.EnterPickResponseEnter);
+        hub.RegisterMsgr(this,CommunicatorEvents.PickResponseEnter);
     }
 
     public void hidePane(){
@@ -37,7 +37,7 @@ public class GetHookPickResponsePane implements IMsgHandler {
 
     @Override
     public void HandleMessage(CommunicatorEvents eventType, String message) {
-        if(eventType == CommunicatorEvents.EnterPickResponseEnter){
+        if(eventType == CommunicatorEvents.PickResponseEnter){
             showPane();
         }
     }

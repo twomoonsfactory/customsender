@@ -24,7 +24,7 @@ public class GetHookReadyPane implements IMsgHandler {
     }
 
     private void setupListener() {
-        hub.RegisterMsgr(this,CommunicatorEvents.EnterReadyEnter);
+        hub.RegisterMsgr(this,CommunicatorEvents.ReadyEnter);
     }
 
     public void hidePane(){
@@ -37,7 +37,7 @@ public class GetHookReadyPane implements IMsgHandler {
 
     @Override
     public void HandleMessage(CommunicatorEvents eventType, String message) {
-        if(eventType == CommunicatorEvents.EnterReadyEnter){
+        if(eventType == CommunicatorEvents.ReadyEnter){
             showPane();
         }
     }

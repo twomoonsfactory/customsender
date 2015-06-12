@@ -27,7 +27,7 @@ public class GetHookPromptSelectionPane implements IMsgHandler {
         setupListener();
     }
 
-    private void setupListener() { hub.RegisterMsgr(this,CommunicatorEvents.EnterPickPlayerEnter); }
+    private void setupListener() { hub.RegisterMsgr(this, CommunicatorEvents.PromptSelectionEnter); }
 
     public void hidePane(){
         ghPromptSelectionPane.setVisibility(View.GONE);
@@ -39,8 +39,21 @@ public class GetHookPromptSelectionPane implements IMsgHandler {
 
     @Override
     public void HandleMessage(CommunicatorEvents eventType, String message) {
-        if(eventType == CommunicatorEvents.EnterPickPlayerEnter){
+        if(eventType == CommunicatorEvents.PromptSelectionEnter){
+            setupButtons(message);
             showPane();
+
+        }
+    }
+
+    private void setupButtons(String message) {
+        String[] sSplit = message.split("::");
+        ghPrompt_Button_1.setText(sSplit[0]);
+        if(sSplit.length > 1) {
+            ghPrompt_Button_2.setText(sSplit[1]);
+            if(sSplit.length > 2) {
+                ghPrompt_Button_3.setText(sSplit[2]);
+            }
         }
     }
 }

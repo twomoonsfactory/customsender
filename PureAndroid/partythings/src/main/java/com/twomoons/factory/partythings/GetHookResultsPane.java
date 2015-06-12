@@ -44,7 +44,7 @@ public class GetHookResultsPane implements IMsgHandler{
 
     @Override
     public void HandleMessage(CommunicatorEvents eventType, String message) {
-        if(eventType == CommunicatorEvents.EnterResultsEnter){
+        if(eventType == CommunicatorEvents.ResultsEnter){
             showPane();
         }
     }

@@ -21,7 +21,7 @@ public class GetHookWaitingPane implements IMsgHandler {
     }
 
     private void setupListener() {
-        hub.RegisterMsgr(this,CommunicatorEvents.EnterWaitingEnter);
+        hub.RegisterMsgr(this,CommunicatorEvents.WaitingEnter);
     }
 
     public void hidePane(){
@@ -34,7 +34,7 @@ public class GetHookWaitingPane implements IMsgHandler {
 
     @Override
     public void HandleMessage(CommunicatorEvents eventType, String message) {
-        if(eventType == CommunicatorEvents.EnterWaitingEnter){
+        if(eventType == CommunicatorEvents.WaitingEnter){
             showPane();
         }
     }

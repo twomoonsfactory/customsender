@@ -20,7 +20,7 @@ public class GetHookPickPlayerPane implements IMsgHandler{
         this.hub = communicationHub;
         this.ghPickPlayerPane = ctx.getViewById(R.id.pickPlayerPane);
         this.ghReadyPromptText = (TextView) ctx.getViewById(R.id.readyPromptText);
-        this.ghReady = (Button) ctx.getViewById(R.id.Ready);
+        this.ghReady = (Button) ctx.getViewById(R.id.ready);
     }
 
     public void hidePane(){
@@ -33,7 +33,7 @@ public class GetHookPickPlayerPane implements IMsgHandler{
 
     @Override
     public void HandleMessage(CommunicatorEvents eventType, String message) {
-        if(eventType == CommunicatorEvents.EnterPickPlayerEnter) {
+        if(eventType == CommunicatorEvents.PickPlayerEnter) {
             showPane();
         }
     }

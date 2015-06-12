@@ -36,8 +36,7 @@ public class CastService extends MediaRouter.Callback implements ICommunicator, 
 
     private ArrayList<CommunicatorEvents> buildEventList(){
         ArrayList<CommunicatorEvents> list =  new ArrayList<CommunicatorEvents>();
-        list.add(CommunicatorEvents.PlayerNameSent);
-        list.add(CommunicatorEvents.ResponseSent);
+        list.add(CommunicatorEvents.EnterGameNameExit);
         return list;
     }
 
@@ -85,7 +84,7 @@ public class CastService extends MediaRouter.Callback implements ICommunicator, 
 
     @Override
     public void HandleMessage(CommunicatorEvents eventType, String message) {
-        if(eventType == CommunicatorEvents.PlayerNameSent)
+        if(eventType == CommunicatorEvents.EnterGameNameExit)
         {
 
         }
