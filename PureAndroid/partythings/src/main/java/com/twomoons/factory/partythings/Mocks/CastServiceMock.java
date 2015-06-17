@@ -28,10 +28,12 @@ public class CastServiceMock implements ICommunicator, IMsgHandler {
 
     private void setupListeners() {
         ArrayList<CommunicatorEvents> events = new ArrayList<CommunicatorEvents>();
+        events.add(CommunicatorEvents.NotConnectedExit);
         events.add(CommunicatorEvents.EnterGameEnter);
         events.add(CommunicatorEvents.EnterGameExit);
         events.add(CommunicatorEvents.EnterGameNameEnter);
         events.add(CommunicatorEvents.EnterGameNameExit);
+        events.add(CommunicatorEvents.PromptSelectionEnter);
         events.add(CommunicatorEvents.PromptSelectionExit);
         _messageHub.RegisterMsgr(this, events);
     }
@@ -43,9 +45,8 @@ public class CastServiceMock implements ICommunicator, IMsgHandler {
             _messageHub.SendMessage(CommunicatorEvents.EnterGameNameEnter, rdm.nextBoolean() ? "gameExists" : "");
         } else if(eventType == CommunicatorEvents.EnterGameNameExit) {
             System.out.println("Game/Player name entered: " + message);
-            _messageHub.SendMessage(CommunicatorEvents.EnterGameEnter, "");
-        } else if(eventType == CommunicatorEvents.EnterGameExit) {
-            _messageHub.SendMessage(CommunicatorEvents.PromptSelectionEnter, "A:::B:::C");
+            _messageHub.SendMessage(CommunicatorEvents.PromptSelectionEnter, "A:::B");
+            //_messageHub.SendMessage(CommunicatorEvents.EnterGameEnter, "");
         } else if(eventType ==CommunicatorEvents.PromptSelectionExit){
             System.out.println("PromptSelected: " + message);
             _messageHub.SendMessage(CommunicatorEvents.WaitingEnter, "");

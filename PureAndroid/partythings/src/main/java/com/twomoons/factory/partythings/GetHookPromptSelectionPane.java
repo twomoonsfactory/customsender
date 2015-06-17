@@ -15,6 +15,7 @@ public class GetHookPromptSelectionPane implements IMsgHandler {
     private final Button ghPrompt_Button_1;
     private final Button ghPrompt_Button_2;
     private final Button ghPrompt_Button_3;
+    private String sSelection;
 
     public GetHookPromptSelectionPane(MainActivity ctx, Hub communicationHub){
         this.ctx = ctx;
@@ -46,14 +47,31 @@ public class GetHookPromptSelectionPane implements IMsgHandler {
         }
     }
 
-    private void setupButtons(String message) {
-        String[] sSplit = message.split("::");
+    private void setupButtons(String message){
+        final String[] sSplit = message.split(":::");
         ghPrompt_Button_1.setText(sSplit[0]);
+        this.ghPrompt_Button_1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                sSelection = sSplit[0];
+            }
+        });
         if(sSplit.length > 1) {
             ghPrompt_Button_2.setText(sSplit[1]);
+            this.ghPrompt_Button_2.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    sSelection = sSplit[1];
+                }
+            });
             if(sSplit.length > 2) {
                 ghPrompt_Button_3.setText(sSplit[2]);
+                this.ghPrompt_Button_3.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        sSelection = sSplit[2];
+                    }
+                });
             }
         }
+        hidePane();
+        hub.SendMessage(CommunicatorEvents.PromptSelectionExit, sSelection);
     }
 }

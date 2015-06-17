@@ -1,5 +1,6 @@
 package com.twomoons.factory.partythings;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,9 +33,13 @@ public class Hub implements IHub {
     @Override
     public void SendMessage(CommunicatorEvents messageType, String message) {
         List<IMsgHandler> handlers = Listeners.get(messageType);
-        if(handlers.size() > 0){
+        if(null == handlers || handlers.size() <= 0) {
+            System.out.println("ERROR: No one is listening for " + messageType.toString());
+        }
+        else
+        {
             for (int i = 0; i < handlers.size(); i++) {
-                handlers.get(i).HandleMessage(messageType, message);
+                    handlers.get(i).HandleMessage(messageType, message);
             }
         }
     }

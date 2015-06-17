@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/notConnectedPane"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical">
         <TextView android:text="@string/not_connected"
             android:layout_width="wrap_content"
@@ -235,7 +235,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/resultsPane"
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical">
         <TextView android:text="@string/you_said_that_player"
             android:layout_width="wrap_content"

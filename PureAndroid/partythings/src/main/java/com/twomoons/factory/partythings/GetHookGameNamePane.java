@@ -17,15 +17,17 @@ public class GetHookGameNamePane implements IMsgHandler{
     private final EditText ghGameEditText;
     private final Button ghEnterGameNameButton;
     private final EditText ghPlayerEditText;
+    private final View ghEnterGamePane;
 
     public GetHookGameNamePane(MainActivity ctx, Hub communicationHub){
         this.ctx = ctx;
         this.hub = communicationHub;
         this.ghGameNamePane = ctx.getViewById(R.id.gameNamePane);
+        this.ghEnterGamePane = ctx.getViewById(R.id.enterGamePane);
         this.ghEnterGameNameText = (TextView) ctx.getViewById(R.id.enterGameNameText);
         this.ghGameEditText = (EditText) ctx.getViewById(R.id.editText);
         this.ghPlayerEditText = (EditText) ctx.getViewById(R.id.editText2);
-        this.ghEnterGameNameButton = (Button) ctx.getViewById(R.id.connectedButton);
+        this.ghEnterGameNameButton = (Button) ctx.getViewById(R.id.createGameButton);
         setupListener();
         setupSubmitButton();
     }
@@ -37,16 +39,18 @@ public class GetHookGameNamePane implements IMsgHandler{
                 String gameName = ghGameEditText.getText().toString();
                 String playerName = ghPlayerEditText.getText().toString();
 
-                hub.SendMessage(CommunicatorEvents.EnterGameNameExit, gameName + " :: " + playerName);
+                hub.SendMessage(CommunicatorEvents.EnterGameNameExit, gameName + ":::" + playerName);
             }
         });
     }
 
     private void setupListener() { hub.RegisterMsgr(this, CommunicatorEvents.EnterGameNameEnter); }
 
-    public void hidePane(){ ghGameNamePane.setVisibility(View.GONE); }
+    public void hidePane(){ ghEnterGamePane.setVisibility(View.GONE); }
 
-    public void showPane(){ ghGameNamePane.setVisibility(View.VISIBLE);}
+    public void showPane(){ ghEnterGamePane.setVisibility(View.VISIBLE);}
+
+    public void showGameNamePane(){ ghGameNamePane.setVisibility(View.VISIBLE);}
 
     public void hideGameNamePane(){ ghGameNamePane.setVisibility(View.GONE);}
 
@@ -54,6 +58,7 @@ public class GetHookGameNamePane implements IMsgHandler{
     public void HandleMessage(CommunicatorEvents eventType, String message) {
         if(eventType == CommunicatorEvents.EnterGameNameEnter) {
             showPane();
+            showGameNamePane();
             if(message == "gameExists") {
                 hideGameNamePane();
             }
