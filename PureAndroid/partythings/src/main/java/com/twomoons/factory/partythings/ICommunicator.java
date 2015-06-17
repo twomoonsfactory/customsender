@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.Menu;
 
 public interface ICommunicator {
-    void Initialize(Context ctx);
+    void Initialize(Context ctx, IHub messageHub);
     void InitializeMenu(Menu menu, int media_route_menu_item);
     void OnResume();
     void OnPause();

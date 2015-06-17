@@ -126,4 +126,4 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-</RelativeLayout><!-- From: file:/E:/src/PartyThings/PureAndroid/CastCompanionLibrary-android-master/res/layout/cast_activity.xml --><!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/build/intermediates/exploded-aar/PureAndroid/CastCompanionLibrary-android-master/unspecified/release/res/layout/cast_activity.xml -->
+</RelativeLayout><!-- From: file:/C:/Users/Joshua/Documents/GitHub/gameofthings/PureAndroid/CastCompanionLibrary-android-master/res/layout/cast_activity.xml --><!-- From: file:/C:/Users/Joshua/Documents/GitHub/gameofthings/PureAndroid/partythings/build/intermediates/exploded-aar/PureAndroid/CastCompanionLibrary-android-master/unspecified/release/res/layout/cast_activity.xml -->

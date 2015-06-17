@@ -14,11 +14,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/notConnectedPane"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical">
-        <TextView android:text="@string/not_connected" android:layout_width="wrap_content"
+        <TextView android:text="@string/not_connected"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/notConnectedText" />
+        <Button
+            android:layout_width="126dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/connectedButton"
+            android:text="Connect"
+            android:layout_marginTop="12dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -27,7 +35,8 @@
         android:id="@+id/enterGamePane"
         android:visibility="gone"
         android:orientation="vertical">
-        <TextView android:text="@string/create_game" android:layout_width="wrap_content"
+        <TextView android:text="@string/create_game"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/createGameText"
             android:layout_gravity="center_horizontal"/>
@@ -36,8 +45,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/gameNamePane"
+            android:visibility="gone"
             android:orientation="vertical">
-            <TextView android:text="@string/create_game_name" android:layout_width="wrap_content"
+            <TextView android:text="@string/create_game_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/createGameText"
                 android:layout_marginTop="24dp"
@@ -53,7 +64,8 @@
                 android:layout_gravity="center_horizontal" />
         </LinearLayout>
 
-        <TextView android:text="@string/create_player_name" android:layout_width="wrap_content"
+        <TextView android:text="@string/create_player_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_below="@+id/createGameText"
@@ -73,7 +85,8 @@
             android:layout_width="126dp"
             android:layout_height="56dp"
             android:layout_gravity="center_horizontal"
-            android:text="@string/join"
+            android:id="@+id/createGameButton"
+            android:text="Join"
             android:layout_marginTop="12dp"/>
     </LinearLayout>
 
@@ -83,7 +96,8 @@
         android:id="@+id/readyPane"
         android:visibility="gone"
         android:orientation="vertical">
-        <TextView android:text="@string/ready_prompt" android:layout_width="wrap_content"
+        <TextView android:text="@string/ready_prompt"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/readyPromptText"
             android:layout_gravity="center_horizontal"/>
@@ -92,6 +106,7 @@
             android:layout_width="126dp"
             android:layout_height="56dp"
             android:layout_gravity="center_horizontal"
+            android:id="@+id/ready"
             android:text="@string/ready"
             android:layout_marginTop="12dp"/>
     </LinearLayout>
@@ -100,9 +115,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/promptSelectionPane"
-
+        android:visibility="gone"
         android:orientation="vertical">
-        <TextView android:text="@string/vote_for_prompt" android:layout_width="wrap_content"
+        <TextView android:text="@string/vote_for_prompt"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/voteForPrompt"
             android:layout_gravity="center_horizontal"/>
@@ -127,7 +143,7 @@
             android:layout_width="fill_parent"
             android:layout_height="56dp"
             android:layout_gravity="center_horizontal"
-            android:text="@string/placeholder"
+            android:text="placeholder"
             android:id="@+id/prompt_button_3"
             android:layout_marginTop="12dp"/>
     </LinearLayout>
@@ -138,7 +154,8 @@
         android:id="@+id/waitingPane"
         android:visibility="gone"
         android:orientation="vertical">
-        <TextView android:text="@string/waiting_for_others" android:layout_width="wrap_content"
+        <TextView android:text="@string/waiting_for_others"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/waitingText"
             android:layout_gravity="center_horizontal"/>
@@ -147,10 +164,42 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/enterResponsePane"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView android:text="@string/enter_response"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/enterResponseText"
+            android:layout_gravity="center_horizontal"/>
+        <TextView android:text="placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/enterResponsePromptText"
+            android:layout_gravity="center_horizontal"/>
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="56dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:id="@+id/enterResponseEdit"/>
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Join Game"
+            android:id="@+id/response_button"
+            android:layout_marginTop="12dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/pickResponsePane"
         android:visibility="gone"
         android:orientation="vertical">
-        <TextView android:text="@string/choose_response" android:layout_width="wrap_content"
+        <TextView android:text="@string/choose_response"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/pickResponseText"
             android:layout_gravity="center_horizontal"/>
@@ -188,28 +237,33 @@
         android:id="@+id/resultsPane"
         android:visibility="gone"
         android:orientation="vertical">
-        <TextView android:text="@string/you_said_that_player" android:layout_width="wrap_content"
+        <TextView android:text="@string/you_said_that_player"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/chosenPlayerIntroText"
             android:layout_gravity="center_horizontal"/>
-        <TextView android:text="@string/placeholder" android:layout_width="wrap_content"
+        <TextView android:text="@string/placeholder"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/chosenPlayerText"
             android:layout_gravity="center_horizontal"/>
-        <TextView android:text="@string/said" android:layout_width="wrap_content"
+        <TextView android:text="@string/said"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/chosenResponseIntroText"
             android:layout_gravity="center_horizontal"/>
-        <TextView android:text="@string/placeholder" android:layout_width="wrap_content"
+        <TextView android:text="@string/placeholder"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/chosenResponseText"
             android:layout_gravity="center_horizontal"/>
-
-        <TextView android:text="@string/youwere" android:layout_width="wrap_content"
+        <TextView android:text="@string/youwere"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/successRateIntroText"
             android:layout_gravity="center_horizontal"/>
-        <TextView android:text="@string/placeholder" android:layout_width="wrap_content"
+        <TextView android:text="@string/placeholder"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/successText"
             android:layout_gravity="center_horizontal"/>
@@ -218,7 +272,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal">
-                <TextView android:text="@string/you_scored" android:layout_width="wrap_content"
+                <TextView android:text="@string/you_scored"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreIntroText"
                     android:layout_gravity="center_horizontal"/>
@@ -232,8 +287,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/pointsOutroText"
                     android:layout_gravity="center_horizontal"/>
-            </LinearLayout>
-
+        </LinearLayout>
     </LinearLayout>
     <!--<Button-->
         <!--android:layout_width="wrap_content"-->

@@ -10,16 +10,20 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.twomoons.factory.partythings.Mocks.CastServiceMock;
 
-public class MainActivity extends ActionBarActivity implements IView {
+
+public class MainActivity extends ActionBarActivity implements IView, IMsgHandler {
 
     private TextView mText;
     private ICommunicator mCommunicator;
+    private Hub communicationHub;
 
     public MainActivity() {
-          mCommunicator = new CastService();
+        mCommunicator = new CastServiceMock();
     }
 
+    //Used by Unit Test only
     public MainActivity(ICommunicator communicator) {
         if(communicator == null) {
             mCommunicator = new CastService();
@@ -31,23 +35,44 @@ public class MainActivity extends ActionBarActivity implements IView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Button button = (Button) findViewById(R.id.click_me_button);
-        final RelativeLayout lay1 = (RelativeLayout) findViewById(R.id.text1Layout);
-        final RelativeLayout lay2 = (RelativeLayout) findViewById(R.id.text2Layout);
+//        final Button button = (Button) findViewById(R.id.click_me_button);
+//        final RelativeLayout lay1 = (RelativeLayout) findViewById(R.id.text1Layout);
+//        final RelativeLayout lay2 = (RelativeLayout) findViewById(R.id.text2Layout);
+//
+//        mText = (TextView) findViewById(R.id.displayText);
+//        button.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View v){
+//                int v1 = lay1.getVisibility();
+//                int v2 = lay2.getVisibility();
+//                lay1.setVisibility(v2);
+//                lay2.setVisibility(v1);
+//            }
+//        });
 
-        mText = (TextView) findViewById(R.id.displayText);
-        button.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                int v1 = lay1.getVisibility();
-                int v2 = lay2.getVisibility();
-                lay1.setVisibility(v2);
-                lay2.setVisibility(v1);
-            }
-        });
+         communicationHub = new Hub();
 
-        mCommunicator.Initialize(this);
+        mCommunicator.Initialize(this, communicationHub);
+
+        communicationHub.RegisterMsgr(this, CommunicatorEvents.EnterGameNameEnter);
 
         setupResponseAdapter();
+
+        setupPaneHooks();
+    }
+
+    public View getViewById(int id){return findViewById(id);}
+
+    private void setupPaneHooks() {
+        GetHookEnterResponsePane enterResponsePane = new GetHookEnterResponsePane(this,communicationHub);
+        GetHookEnterGamePane enterGamePane = new GetHookEnterGamePane(this,communicationHub);
+        GetHookNotConnectedPane notConnectedPane = new GetHookNotConnectedPane(this,communicationHub);
+        GetHookPickResponsePane pickResponsePane = new GetHookPickResponsePane(this,communicationHub);
+        GetHookPickPlayerPane pickPlayerPane = new GetHookPickPlayerPane(this,communicationHub);
+        GetHookPromptSelectionPane promptSelectionPane = new GetHookPromptSelectionPane(this,communicationHub);
+        GetHookGameNamePane gameNamePane = new GetHookGameNamePane(this,communicationHub);
+        GetHookWaitingPane waitingPane = new GetHookWaitingPane(this,communicationHub);
+        GetHookReadyPane readyPane = new GetHookReadyPane(this,communicationHub);
+        GetHookResultsPane resultsPane = new GetHookResultsPane(this,communicationHub);
     }
 
     private void setupResponseAdapter() {
@@ -96,5 +121,10 @@ public class MainActivity extends ActionBarActivity implements IView {
     public void onPause(){
 
         super.onPause();
+    }
+
+    @Override
+    public void HandleMessage(CommunicatorEvents eventType, String message) {
+
     }
 }

@@ -40,4 +40,4 @@
         android:maxLines="1"
         android:textAppearance="@style/android:TextAppearance.StatusBar.EventContent" />
 
-</RelativeLayout><!-- From: file:/E:/src/PartyThings/PureAndroid/CastCompanionLibrary-android-master/res/layout-v10/custom_notification.xml --><!-- From: file:/E:/src/PartyThings/PureAndroid/partythings/build/intermediates/exploded-aar/PureAndroid/CastCompanionLibrary-android-master/unspecified/release/res/layout-v10/custom_notification.xml -->
+</RelativeLayout><!-- From: file:/C:/Users/Joshua/Documents/GitHub/gameofthings/PureAndroid/CastCompanionLibrary-android-master/res/layout-v10/custom_notification.xml --><!-- From: file:/C:/Users/Joshua/Documents/GitHub/gameofthings/PureAndroid/partythings/build/intermediates/exploded-aar/PureAndroid/CastCompanionLibrary-android-master/unspecified/release/res/layout-v10/custom_notification.xml -->
